@@ -8,8 +8,111 @@ import java.util.Arrays;
 public class matrix extends preprocessing {
     
     
-    public static void writeFile(){
-        File myObj = new File("tfidf.txt");
+    public static void writeFile(String s){
+        File myObj = new File(s);
+    }
+
+    public static void generateKeyWords(double[][] matrix, ArrayList<Integer> indexes, ArrayList<String> wordList){
+
+        //System.out.println(wordList);
+        double[] totals1 = new double[indexes.size()];
+        double[] totals2 = new double[indexes.size()];
+        double[] totals3 = new double[indexes.size()];
+        String[] words1 = new String[5];
+        String[] words2 = new String[5];
+        String[] words3 = new String[5];
+        double max1 = 0.0;
+        double max2 = 0.0;
+        double max3 = 0.0;
+        int ind1 = 0;
+        int ind2 = 0;
+        int ind3 = 0;
+
+        writeFile("topics.txt");
+        try {
+            FileWriter myWriter = new FileWriter("topics.txt");
+            for(int k = 0; k < 3; k++){
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < matrix[0].length;j++){
+                        if(k == 0){
+                            totals1[j] = totals1[j] + matrix[i][j];
+                        }else if ( k == 1){
+                            totals2[j] = totals2[j] + matrix[8 + i][j];
+                        } else {
+                            totals3[j] = totals3[j] + matrix[16 + i][j];
+                        }
+                    }
+                }
+            }
+            for(int k = 0; k < 5; k++){
+                for(int i = 0; i < 3; i++){
+                    for(int j = 0; j < matrix[0].length; j++){
+                        if(i == 0){
+                            if(totals1[j] > max1){
+                                max1 = totals1[j];
+                                ind1 = j;
+                            }
+                        }else if (i == 1){
+                            if(totals2[j] > max2){
+                                max2 = totals2[j];
+                                ind2 = j;
+                            }
+                        }else {
+                            if(totals3[j] > max3){
+                                max3 = totals3[j];
+                                ind3 = j;
+                            }
+                        }
+                    }
+                }
+                words1[k] = wordList.get(indexes.get(ind1));
+                totals1[ind1] = 0.0;
+                max1 = 0.0;
+                ind1 = 0;
+                words2[k] = wordList.get(indexes.get(ind2));
+                totals2[ind2] = 0.0;
+                max2 = 0.0;
+                ind2 = 0;
+                words3[k] = wordList.get(indexes.get(ind3));
+                totals3[ind3] = 0.0;
+                max3 = 0.0;
+                ind3 = 0;
+            }
+
+
+            for(int i = 0; i < 3; i++){
+                if(i == 0){
+                    myWriter.write("Cluster 1 keywords: ");
+                } else if (i == 1){
+                    myWriter.write("Cluster 2 keywords: ");
+                } else {
+                    myWriter.write("Cluster 3 keywords: ");
+                }
+                for(int j = 0; j < 5; j++){
+                    if(i == 0){
+                        myWriter.write(words1[j]);
+                        myWriter.write(", ");
+                    }else if (i == 1){
+                        myWriter.write(words2[j]);
+                        myWriter.write(", ");
+                    }else {
+                        myWriter.write(words3[j]);
+                        myWriter.write(", ");
+                    }
+                }
+                
+                myWriter.write("\n");
+            }
+            myWriter.flush();
+            myWriter.close();
+            //System.out.println("Successfully wrote to the file.");
+          } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+          }
+        
+        
+
     }
 
     public static void writeToFile(double[][] matrix){
@@ -23,7 +126,7 @@ public class matrix extends preprocessing {
                 myWriter.write("\n");
             }
             myWriter.close();
-            System.out.println("Successfully wrote to the file.");
+            //System.out.println("Successfully wrote to the file.");
           } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
@@ -49,8 +152,8 @@ public class matrix extends preprocessing {
                 //System.out.println(word);
             }
         }
-        System.out.println("size");
-        System.out.println(indexes.size());
+        //System.out.println("size");
+       // System.out.println(indexes.size());
         indexes.remove(wordList.indexOf("a"));
 
         int sizer = 0;
@@ -80,8 +183,9 @@ public class matrix extends preprocessing {
         //printMyMatrix(finalMatrix);
         //idf(wordArrayList);
         double[][] returnMatrix = tdidf(tf(wordArrayList),idf(wordArrayList), wordArrayList);
-        writeFile();
+        writeFile("tfidf.txt");
         writeToFile(returnMatrix);
+        generateKeyWords(returnMatrix, indexes, wordList);
         return returnMatrix;
     }
 

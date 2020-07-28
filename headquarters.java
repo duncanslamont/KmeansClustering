@@ -122,7 +122,7 @@ public class headquarters {
         */
         
         
-        System.out.println("Cluster analysis");
+        //System.out.println("Cluster analysis");
 
 
         ArrayList<ArrayList<Integer>> clusters = clustering.masterCluster(myMatrix, 3);
@@ -151,15 +151,13 @@ public class headquarters {
             if(sameClusters(clusters, temp, 3)){
                 //System.out.println(clusters);
                 //System.out.println(newClusters);
-                System.out.println("Counter");
-                System.out.println(counter);
+                //System.out.println("Counter");
+                //System.out.println(counter);
                 flag = false;
             } 
         }
-
-
-
-
+        analysis.report(clusters);
+        /*
         int i = 0;
         for(ArrayList<Integer> cluster:clusters){
             System.out.println(i);
@@ -170,7 +168,7 @@ public class headquarters {
             i++;
             System.out.println(" ");
         }
-        
+        */
         //System.out.println("Cluster mean analysis");
         //clustering.printClusterMean(myMatrix, clusters);
         
